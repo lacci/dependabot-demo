@@ -1,14 +1,25 @@
 {
-  "extends": ["config:base"],
-  "enabledManagers": ["conan"],
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "conan"
+  ],
   "packageRules": [
     {
-      "matchManagers": ["conan"],
+      "matchManagers": [
+        "conan"
+      ],
       "enabled": true,
       "groupName": "conan dependencies",
-      "matchPaths": ["conanfile.py"]
+      "matchFileNames": [
+        "conanfile.py"
+      ]
     }
   ],
-  "labels": ["dependencies", "conan"],
+  "labels": [
+    "dependencies",
+    "conan"
+  ],
   "automerge": true
 }
