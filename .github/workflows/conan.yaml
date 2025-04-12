@@ -15,6 +15,9 @@ jobs:
     - name: Conan version
       run: echo "${{ steps.conan.outputs.version }}"
 
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Print pwd
       run: pwd
     
