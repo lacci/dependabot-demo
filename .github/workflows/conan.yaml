@@ -25,4 +25,4 @@ jobs:
       run: ls -la .
 
     - name: Conan deps
-      run: conan info .
+      run: conan info --only None .
