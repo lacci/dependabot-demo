@@ -5,7 +5,7 @@
     {
       "matchManagers": ["conan"],
       "enabled": true,
-      "groupName": "conan dependencies".
+      "groupName": "conan dependencies",
       "matchPaths": ["conanfile.py"],
     }
   ],
