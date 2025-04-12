@@ -1,4 +1,7 @@
 {
+  "conan": {
+    "enabled": true
+  },
   "extends": [
     "config:recommended"
   ],
