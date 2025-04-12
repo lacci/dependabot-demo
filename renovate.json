@@ -14,12 +14,12 @@
       "groupName": "conan dependencies",
       "matchFileNames": [
         "conanfile.py"
-      ]
+      ],
+      "automerge": false
     }
   ],
   "labels": [
     "dependencies",
     "conan"
-  ],
-  "automerge": true
+  ]
 }
