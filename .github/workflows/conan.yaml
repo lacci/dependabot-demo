@@ -1,0 +1,16 @@
+name: Conan
+
+on: [pull_request]
+
+jobs:
+  conan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+      with:
+        version: 1.66
+
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
