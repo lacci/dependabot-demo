@@ -3,7 +3,7 @@ name: Renovatebot
 on: workflow_dispatch
 
 jobs:
-  conan:
+  renovatebot:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -13,4 +13,4 @@ jobs:
       uses: renovatebot/github-action@v41.0.18
       with:
         token: ${{ secrets.RENOVATE_TOKEN }}
-        configurationFile: renovate.js
+        configurationFile: renovate.json
