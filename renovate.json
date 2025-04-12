@@ -1,5 +1,10 @@
 {
-  "conan": {
-    "enabled": true
-  }
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "matchManagers": ["conan"],
+      "enabled": true,
+      "groupName": "conan dependencies"
+    }
+  ]
 }
