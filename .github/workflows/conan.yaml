@@ -15,5 +15,11 @@ jobs:
     - name: Conan version
       run: echo "${{ steps.conan.outputs.version }}"
 
+    - name: Print pwd
+      run: pwd
+    
+    - name: List files
+      run: ls -la .
+
     - name: Conan deps
       run: conan info .
