@@ -3,7 +3,8 @@
     "enabled": true
   },
   "extends": [
-    "config:recommended"
+    "config:recommended", 
+    ":disableDependencyDashboard"
   ],
   "enabledManagers": [
     "conan"
