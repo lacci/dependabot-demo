@@ -15,7 +15,6 @@
         "conan"
       ],
       "enabled": true,
-      "groupName": "conan dependencies",
       "matchFileNames": [
         "conanfile.py"
       ],
