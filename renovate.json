@@ -15,9 +15,6 @@
         "conan"
       ],
       "enabled": true,
-      "matchFileNames": [
-        "conanfile.py"
-      ],
       "automerge": false
     }
   ],
