@@ -3,6 +3,7 @@ name: Renovatebot
 on: workflow_dispatch
 
 permissions:
+  pull-requests: write
   security-events: read
 
 jobs:
