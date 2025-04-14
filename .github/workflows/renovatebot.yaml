@@ -2,6 +2,9 @@ name: Renovatebot
 
 on: workflow_dispatch
 
+permissions:
+  security-events: read
+
 jobs:
   renovatebot:
     runs-on: ubuntu-latest
