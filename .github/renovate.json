@@ -18,6 +18,11 @@
       "automerge": false
     }
   ],
+  {
+    "vulnerabilityAlerts": {
+      "enabled": false
+    }
+  },
   "labels": [
     "dependencies",
     "conan"
