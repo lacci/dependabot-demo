@@ -11,11 +11,12 @@ jobs:
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.18
-      with:
+      # with:
         # token: ${{ secrets.GITHUB_TOKEN }}
-        token: ${{ secrets.RENOVATE_TOKEN }}
+        # token: ${{ secrets.RENOVATE_TOKEN }}
         # configurationFile: renovate.json
       env:
-        LOG_LEVEL: debug
+        # LOG_LEVEL: debug
+        RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
         RENOVATE_REPOSITORIES: ${{ github.repository }}
-        # RENOVATE_DRY_RUN: true
+        RENOVATE_DRY_RUN: true
