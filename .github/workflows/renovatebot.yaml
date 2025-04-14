@@ -2,10 +2,6 @@ name: Renovatebot
 
 on: workflow_dispatch
 
-permissions:
-  pull-requests: write
-  security-events: write
-
 jobs:
   renovatebot:
     runs-on: ubuntu-latest
