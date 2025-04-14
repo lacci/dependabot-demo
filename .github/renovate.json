@@ -18,10 +18,8 @@
       "automerge": false
     }
   ],
-  {
-    "vulnerabilityAlerts": {
-      "enabled": false
-    }
+  "vulnerabilityAlerts": {
+    "enabled": false
   },
   "labels": [
     "dependencies",
