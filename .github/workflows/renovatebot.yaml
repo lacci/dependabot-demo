@@ -12,6 +12,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4.2.2
 
+    - name: Generate report folder
+      run: |
+        mkdir -p "${{ github.workspace }}/renovatebot-reports/"
+
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.18
       env:
