@@ -20,8 +20,8 @@ jobs:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: "${{ GITHUB_WORKSPACE }}/renovatebot-reports/renovatebot-report.json"
+        RENOVATE_REPORT_PATH: "${{ github.workspace }}/renovatebot-reports/renovatebot-report.json"
     
     - name: Renovatebot report
       run: |
-          echo "${{ GITHUB_WORKSPACE }}/renovatebot-reports/renovatebot-report.json"
+          echo "${{ github.workspace }}/renovatebot-reports/renovatebot-report.json"
