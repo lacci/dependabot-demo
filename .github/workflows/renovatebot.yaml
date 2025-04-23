@@ -24,4 +24,4 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          cat ${{ runner.temp }}
+          echo ${{ env.RENOVATE_TMPDIR }}
