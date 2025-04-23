@@ -20,7 +20,7 @@ jobs:
     #     mkdir -p ${REPORT_DIR}
 
     - name: Self-hosted Renovate
-      uses: renovatebot/github-action@v41.0.18
+      uses: renovatebot/github-action@v41.0.21
       env:
         LOG_LEVEL: debug
         RENOVATE_TOKEN: ${{ github.token }}
