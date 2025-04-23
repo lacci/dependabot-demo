@@ -17,6 +17,9 @@ jobs:
 
     - name: Generate report folder
       run: |
+        uname -a
+        ls -la /
+        pwd
         mkdir -p ${REPORT_DIR}
 
     - name: Self-hosted Renovate
