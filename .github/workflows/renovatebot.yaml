@@ -24,4 +24,4 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          echo ${{ env.RENOVATE_TMPDIR }}
+          echo ${{ env.TMPDIR }}
