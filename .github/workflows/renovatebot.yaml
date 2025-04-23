@@ -29,16 +29,16 @@ jobs:
       uses: renovatebot/github-action@v41.0.21
       with:
         docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
-        docker-volumes: /tmp/renovate:/tmp/renovate
+        docker-volumes: /tmp/report:/tmp/report
       env:
         LOG_LEVEL: debug
         RENOVATE_TOKEN: ${{ github.token }}
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: /tmp/renovate/report.json
+        RENOVATE_REPORT_PATH: /tmp/report/report.json
         HOME: ${{ github.workspace }}
     
     - name: Renovatebot report
       run: |
-          echo "/tmp/renovate/report.json"
+          echo "/tmp/report/report.json"
