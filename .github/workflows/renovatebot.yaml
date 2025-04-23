@@ -3,7 +3,7 @@ name: Renovatebot
 on: workflow_dispatch
 
 env:
-  REPORT_DIR: /tmp/renovate/renovatebot-reports
+  REPORT_DIR: /renovatebot-reports
 
 jobs:
   renovatebot:
@@ -17,10 +17,7 @@ jobs:
 
     - name: Generate report folder
       run: |
-        uname -a
-        ls -la /
-        pwd
-        mkdir -p ${REPORT_DIR}
+        mkdir -p $(pwd)/${REPORT_DIR}
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.18
@@ -30,9 +27,9 @@ jobs:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: "/tmp/renovate/renovatebot-reports/renovatebot-report.json"
+        RENOVATE_REPORT_PATH: "$(pwd)/${REPORT_DIR}/renovatebot-report.json"
         HOME: ${{ github.workspace }}
     
     - name: Renovatebot report
       run: |
-          echo "${REPORT_DIR}/renovatebot-report.json"
+          echo "$(pwd)/${REPORT_DIR}/renovatebot-report.json"
