@@ -19,17 +19,26 @@ jobs:
     #   run: |
     #     mkdir -p ${REPORT_DIR}
 
+    - name: Determine current user
+      id: id
+      run: |
+        echo "user=$(id -u)" >> $GITHUB_OUTPUT
+        echo "group=$(id -g)" >> $GITHUB_OUTPUT
+
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
+      with:
+        docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
+        docker-volumes: /tmp/renovate:/tmp/renovate
       env:
         LOG_LEVEL: debug
         RENOVATE_TOKEN: ${{ github.token }}
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: report.json
+        RENOVATE_REPORT_PATH: /tmp/renovate/report.json
         HOME: ${{ github.workspace }}
     
     - name: Renovatebot report
       run: |
-          echo "${REPORT_DIR}/renovatebot-report.json"
+          echo "/tmp/renovate/report.json"
