@@ -42,4 +42,4 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          echo "/tmp/report/report.json"
+          cat "/tmp/report/report.json"
