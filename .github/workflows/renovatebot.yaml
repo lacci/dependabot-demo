@@ -17,7 +17,7 @@ jobs:
 
     - name: Generate report folder
       run: |
-        mkdir -p ${BUILD_DIR}
+        mkdir -p ${REPORT_DIR}
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.18
@@ -27,9 +27,9 @@ jobs:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: ${BUILD_DIR}/renovatebot-report.json
+        RENOVATE_REPORT_PATH: ${REPORT_DIR}/renovatebot-report.json
         HOME: ${{ github.workspace }}
     
     - name: Renovatebot report
       run: |
-          echo "${BUILD_DIR}/renovatebot-report.json"
+          echo "${REPORT_DIR}/renovatebot-report.json"
