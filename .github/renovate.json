@@ -19,8 +19,9 @@
     }
   ],
   "vulnerabilityAlerts": {
-    "enabled": false
+    "enabled": true
   },
+  "osvVulnerabilityAlerts": true,
   "rebaseWhen": "behind-base-branch",
   "labels": [
     "dependencies",
