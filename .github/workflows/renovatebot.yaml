@@ -8,6 +8,8 @@ env:
 jobs:
   renovatebot:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: read
     steps:
     - name: Echo api url
       run: echo "${{ github.api_url }}"
