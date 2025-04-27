@@ -86,7 +86,7 @@ jobs:
                 else "✅ \($pr.prStatus)"
                 end
               ) | \($u.notes) |"
-          ' renovate-report.json
+          ' /tmp/report/report.json
           )
 
 
