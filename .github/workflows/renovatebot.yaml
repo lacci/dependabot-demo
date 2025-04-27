@@ -4,6 +4,7 @@ on: workflow_dispatch
 
 env:
   REPORT_DIR: renovatebot-reports
+  REPORT_NAME: renovate-report.json
 
 jobs:
   renovatebot:
@@ -44,7 +45,7 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          cat "/tmp/report/report.json"
+          cat "/tmp/report/renovate-report.json"
           
           (
           GREEN="\033[0;32m"
