@@ -46,6 +46,8 @@ jobs:
     - name: Renovatebot report
       run: |
           cat "/tmp/report/renovate-report.json"
+          echo "\n"
+          
           
           (
           GREEN="\033[0;32m"
