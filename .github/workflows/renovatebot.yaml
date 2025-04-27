@@ -45,53 +45,61 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          # cat "/tmp/report/renovate-report.json"
-          
-          
-          (
-          echo -e "# Renovate Dependency Update Summary"
-          echo -e "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
-          echo -e "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
-          
-          jq -r '
-            def existing_prs: (
-              .repositories[]?.branches? // []
-              | map(select(.upgrades != null))
-              | map(.upgrades[])
-              | map({
-                  depName: .depName,
-                  currentVersion: .currentVersion,
-                  newVersion: .newVersion,
-                  prBranch: (.branchName // "-"),
-                  prStatus: (.result // "done")
-                })
-            );
-          
-            .repositories[]? 
-            | .packageFiles? // {}
-            | to_entries[]
-            | .value[]
-            | select(.deps != null)
-            | .deps[]
-            | select(.updates != null and (.updates | length > 0))
-            | .updates[]
-            | {
+          cat "/tmp/report/renovate-report.json"
+
+    - name: Generate Renovate Report Summary
+      run: |
+        # Create the markdown summary file
+        echo "# Renovate Dependency Update Summary" > renovate-report-summary.md
+        echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |" >> renovate-report-summary.md
+        echo "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|" >> renovate-report-summary.md
+
+        # Run jq to process the JSON and append the table rows to the markdown file
+        jq -r '
+          def existing_prs: (
+            .repositories[]?.branches? // []
+            | map(select(.upgrades != null))
+            | map(.upgrades[])
+            | map({
                 depName: .depName,
                 currentVersion: .currentVersion,
                 newVersion: .newVersion,
-                updateType: .updateType,
-                branchName: .branchName,
-                notes: .bucket
-              }
-            | . as $u
-            | (
-                existing_prs
-                | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
-                | .[0] // {prBranch: "-", prStatus: "Missing"}
-              ) as $pr
-            | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
-          ' /tmp/report/renovate-report.json
-          )
+                prBranch: (.branchName // "-"),
+                prStatus: (.result // "done")
+              })
+          );
+
+          .repositories[]? 
+          | .packageFiles? // {}
+          | to_entries[]
+          | .value[]
+          | select(.deps != null)
+          | .deps[]
+          | select(.updates != null and (.updates | length > 0))
+          | .updates[]
+          | {
+              depName: .depName,
+              currentVersion: .currentVersion,
+              newVersion: .newVersion,
+              updateType: .updateType,
+              branchName: .branchName,
+              notes: .bucket
+            }
+          | . as $u
+          | (
+              existing_prs
+              | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
+              | .[0] // {prBranch: "-", prStatus: "Missing"}
+            ) as $pr
+          | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
+        ' /tmp/report/renovate-report.json >> /tmp/report/renovate-report-summary.md
+
+    # Step 4: Upload the generated markdown file as an artifact
+    - name: Upload Markdown Summary as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: renovate-report-summary
+        path: /tmp/report/renovate-report-summary.md
 
 
 
