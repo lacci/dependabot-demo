@@ -47,10 +47,14 @@ jobs:
           cat "/tmp/report/report.json"
           
           (
+          GREEN="\033[0;32m"
+          RED="\033[0;31m"
+          NC="\033[0m"
+          
           echo -e "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
           echo -e "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
           
-          jq -r '
+          jq -r --arg green "$GREEN" --arg red "$RED" --arg nc "$NC" '
             def existing_prs: [
               .repositories[].branches[]
               | select(.upgrades != null)
@@ -64,7 +68,11 @@ jobs:
                 }
             ];
           
-            .repositories[].packageFiles[].deps[]
+            .repositories[].packageFiles
+            | to_entries[]
+            | .value[]
+            | select(.deps != null)
+            | .deps[]
             | select(.updates != null and (.updates | length > 0))
             | .updates[]
             | {
@@ -82,11 +90,13 @@ jobs:
                 | .[0] // {prBranch: "-", prStatus: "Missing"}
               ) as $pr
             | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \(
-                if $pr.prStatus == "Missing" then "❌ Missing"
-                else "✅ \($pr.prStatus)"
+                if $pr.prStatus == "Missing"
+                then "\($red)❌ Missing\($nc)"
+                else "\($green)✅ \($pr.prStatus)\($nc)"
                 end
               ) | \($u.notes) |"
-          ' /tmp/report/report.json
+          ' renovate-report.json
           )
+
 
 
