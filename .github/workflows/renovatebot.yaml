@@ -47,14 +47,15 @@ jobs:
       run: |
           cat "/tmp/report/renovate-report.json"
 
-    - name: Generate Renovate Report Summary
+    # Step 3: Run the script to generate and print the markdown summary
+    - name: Print Renovate Report Summary
       run: |
-        # Create the markdown summary file
-        echo "# Renovate Dependency Update Summary" > renovate-report-summary.md
-        echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |" >> renovate-report-summary.md
-        echo "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|" >> renovate-report-summary.md
+        # Print the Markdown table header
+        echo "# Renovate Dependency Update Summary"
+        echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
+        echo "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
 
-        # Run jq to process the JSON and append the table rows to the markdown file
+        # Run jq to process the JSON and print the table rows to the console
         jq -r '
           def existing_prs: (
             .repositories[]?.branches? // []
@@ -92,14 +93,8 @@ jobs:
               | .[0] // {prBranch: "-", prStatus: "Missing"}
             ) as $pr
           | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
-        ' /tmp/report/renovate-report.json >> /tmp/report/renovate-report-summary.md
-
-    # Step 4: Upload the generated markdown file as an artifact
-    - name: Upload Markdown Summary as Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: renovate-report-summary
-        path: /tmp/report/renovate-report-summary.md
+        ' /tmp/report/renovate-report.json
+      shell: bash
 
 
 
