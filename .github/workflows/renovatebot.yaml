@@ -40,7 +40,7 @@ jobs:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: /tmp/report/report.json
+        RENOVATE_REPORT_PATH: /tmp/report/renovate-report.json
         HOME: ${{ github.workspace }}
     
     - name: Renovatebot report
@@ -96,7 +96,7 @@ jobs:
                 else "\($green)✅ \($pr.prStatus)\($nc)"
                 end
               ) | \($u.notes) |"
-          ' renovate-report.json
+          ' /tmp/report/renovate-report.json
           )
 
 
