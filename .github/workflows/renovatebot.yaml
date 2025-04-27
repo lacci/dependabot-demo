@@ -52,7 +52,7 @@ jobs:
       run: |
         # Print the Markdown table header
         echo "# Renovate Dependency Update Summary"
-        echo "\n"
+        echo ""
         echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
         echo "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
 
@@ -96,7 +96,7 @@ jobs:
           | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
         ' /tmp/report/renovate-report.json
 
-        echo "\n"
+        echo ""
       shell: bash
 
 
