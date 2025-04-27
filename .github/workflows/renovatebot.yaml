@@ -45,8 +45,7 @@ jobs:
     
     - name: Renovatebot report
       run: |
-          cat "/tmp/report/renovate-report.json"
-          echo "\n"
+          # cat "/tmp/report/renovate-report.json"
           
           
           (
