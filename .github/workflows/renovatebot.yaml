@@ -56,20 +56,21 @@ jobs:
           echo -e "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
           
           jq -r --arg green "$GREEN" --arg red "$RED" --arg nc "$NC" '
-            def existing_prs: [
-              .repositories[].branches[]
-              | select(.upgrades != null)
-              | .upgrades[]
-              | {
+            def existing_prs: (
+              .repositories[]?.branches? // []
+              | map(select(.upgrades != null))
+              | map(.upgrades[])
+              | map({
                   depName: .depName,
                   currentVersion: .currentVersion,
                   newVersion: .newVersion,
                   prBranch: (.branchName // "-"),
                   prStatus: (.result // "done")
-                }
-            ];
+                })
+            );
           
-            .repositories[].packageFiles
+            .repositories[]? 
+            | .packageFiles? // {}
             | to_entries[]
             | .value[]
             | select(.deps != null)
@@ -96,8 +97,9 @@ jobs:
                 else "\($green)✅ \($pr.prStatus)\($nc)"
                 end
               ) | \($u.notes) |"
-          ' /tmp/report/renovate-report.json
+          ' renovate-report.json
           )
+
 
 
 
