@@ -96,7 +96,7 @@ jobs:
 
     # Step 4: Upload the generated markdown file as an artifact
     - name: Upload Markdown Summary as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: renovate-report-summary
         path: /tmp/report/renovate-report-summary.md
