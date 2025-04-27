@@ -45,3 +45,12 @@ jobs:
     - name: Renovatebot report
       run: |
           cat "/tmp/report/report.json"
+          
+          (echo "| Dependency | Current Version | New Version | Update Type | PR Title | PR Status |"; echo "|:-----------|:-----------------|:------------|:------------|:---------|:----------|"; 
+          jq -r '
+            .repositories[].branches[] 
+            | select(.upgrades != null) 
+            | .upgrades[] 
+            | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prTitle // .branchName) | \(.result) |"
+          ' /tmp/report/report.json)
+
