@@ -63,6 +63,7 @@ jobs:
             | . as $dep
             | "| \(.depName ) | \(.currentVersion // "N/A") | \(.depType) | \(( .updates[] | .newVersion) // "N/A") | \(reduce .updates[] as $up (null; [., $up.newVersion + " (" + $up.updateType + ")"] | map(select(.!=null)) | join("<br>")) // "N/A") | \(.registryUrl // "N/A") |"
           ' /tmp/report/renovate-report.json
+          echo ""
         ) >> $GITHUB_STEP_SUMMARY
         (
           echo "Pull requests"
