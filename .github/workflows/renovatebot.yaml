@@ -49,31 +49,16 @@ jobs:
 
     - name: Generate Renovate Report Summary
       run: |
-        {
-          echo "# Renovate Dependency Update Summary"
-          echo ""
-          echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
-          echo "|:-----------|:----------------|:------------|:------------|:----------|:----------|:------|"
+        (
+          echo "| Dependency | Current Version | New Version | Update Type | PR Title | PR Status |"; 
+          echo "|:-----------|:-----------------|:------------|:------------|:---------|:----------|"; 
           jq -r '
-            .repositories[].branches[]
-            | select(.upgrades != null)
-            | .upgrades[]
-            | {
-                depName: (.depName // "-"),
-                currentVersion: (.currentVersion // "-"),
-                newVersion: (.newVersion // "-"),
-                updateType: (.updateType // "-"),
-                prBranch: (input.branchName // "-"),
-                prStatus: (input.result // "-")
-              }
-            ' --slurpfile input renovate-report.json renovate-report.json \
-            | jq -s '
-              ["| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status |",
-               "|:-----------|:----------------|:------------|:------------|:----------|:----------|"] + 
-              ( .[] | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prBranch) | \(.prStatus) |" )
-            | .[]
-            '
-        } >> $GITHUB_STEP_SUMMARY
+            .repositories[].branches[] 
+            | select(.upgrades != null) 
+            | .upgrades[] 
+            | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prTitle // .branchName) | \(.result) |"
+          ' /tmp/report/renovate-report.json
+        ) >> $GITHUB_STEP_SUMMARY
 
 
 
