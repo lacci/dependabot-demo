@@ -55,62 +55,24 @@ jobs:
           echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
           echo "|:-----------|:----------------|:------------|:------------|:----------|:----------|:------|"
           jq -r '
-            def existing_prs: (
-              .repositories[]?.branches? // []
-              | map(select(.upgrades != null))
-              | map(.upgrades[])
-              | map({
-                  depName: .depName,
-                  currentVersion: .currentVersion,
-                  newVersion: .newVersion,
-                  prBranch: (.branchName // "-"),
-                  prStatus: (.result // "done")
-                })
-            );
-          
-            .repositories[]? 
-            | .packageFiles? // {}
-            | to_entries[]
-            | .value[]
-            | select(.deps != null)
-            | .deps[]
-            | select(.updates != null and (.updates | length > 0))
+            .repositories[].branches[]
+            | select(.upgrades != null)
+            | .upgrades[]
             | {
                 depName: (.depName // "-"),
                 currentVersion: (.currentVersion // "-"),
-                updates: .updates
-              }
-            | . as $dep
-            | $dep.updates[]
-            | {
-                depName: $dep.depName,
-                currentVersion: $dep.currentVersion,
                 newVersion: (.newVersion // "-"),
                 updateType: (.updateType // "-"),
-                branchName: (.branchName // "-"),
-                notes: (.bucket // "-")
+                prBranch: (input.branchName // "-"),
+                prStatus: (input.result // "-")
               }
-            | . as $u
-            | (
-                existing_prs
-                | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
-                | .[0] // {prBranch: "-", prStatus: "Missing"}
-              ) as $pr
-            | {
-                depName: $u.depName,
-                currentVersion: $u.currentVersion,
-                newVersion: $u.newVersion,
-                updateType: $u.updateType,
-                prBranch: $pr.prBranch,
-                prStatus: $pr.prStatus,
-                notes: $u.notes
-              }
-          ' renovate-report.json \
-          | jq -s '
-            sort_by(.depName)
+            ' --slurpfile input renovate-report.json renovate-report.json \
+            | jq -s '
+              ["| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status |",
+               "|:-----------|:----------------|:------------|:------------|:----------|:----------|"] + 
+              ( .[] | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prBranch) | \(.prStatus) |" )
             | .[]
-            | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prBranch) | \(.prStatus) | \(.notes) |"
-          '
+            '
         } >> $GITHUB_STEP_SUMMARY
 
 
