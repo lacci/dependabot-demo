@@ -67,7 +67,7 @@ jobs:
                   prStatus: (.result // "done")
                 })
             );
-    
+          
             .repositories[]? 
             | .packageFiles? // {}
             | to_entries[]
@@ -77,12 +77,12 @@ jobs:
             | select(.updates != null and (.updates | length > 0))
             | .updates[]
             | {
-                depName: .depName,
-                currentVersion: .currentVersion,
-                newVersion: .newVersion,
-                updateType: .updateType,
-                branchName: .branchName,
-                notes: .bucket
+                depName: (.depName // "-"),
+                currentVersion: (.currentVersion // "-"),
+                newVersion: (.newVersion // "-"),
+                updateType: (.updateType // "-"),
+                branchName: (.branchName // "-"),
+                notes: (.bucket // "-")
               }
             | . as $u
             | (
@@ -90,8 +90,21 @@ jobs:
                 | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
                 | .[0] // {prBranch: "-", prStatus: "Missing"}
               ) as $pr
-            | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
-          ' /tmp/report/renovate-report.json
+            | {
+                depName: $u.depName,
+                currentVersion: $u.currentVersion,
+                newVersion: $u.newVersion,
+                updateType: $u.updateType,
+                prBranch: $pr.prBranch,
+                prStatus: $pr.prStatus,
+                notes: $u.notes
+              }
+          ' /tmp/report/renovate-report.json \
+          | jq -s '
+            sort_by(.depName)
+            | .[]
+            | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prBranch) | \(.prStatus) | \(.notes) |"
+          '
         } >> $GITHUB_STEP_SUMMARY
 
 
