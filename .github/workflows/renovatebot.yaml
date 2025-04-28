@@ -50,7 +50,18 @@ jobs:
     - name: Generate Renovate Report Summary
       run: |
         (
-          echo "Dependencies"
+          echo "# Problems"
+          echo "| Type | Message | Details  |"; 
+          echo "|:-----|:--------|:---------|"; 
+          jq -r '
+            .repositories[].problems[] |
+            "| \(if (.warnings // []) | length > 0 then "⚠️" elif .err then "❌" else "" end) | \(.msg) | \(if (.warnings // []) | length > 0 then (.warnings | join("<br>")) elif .err then .err.message else "" end) |"
+          ' /tmp/report/renovate-report.json
+          echo ""
+        ) >> $GITHUB_STEP_SUMMARY
+      
+        (
+          echo "# Dependencies"
           echo "| Name | Current version | Dependency type | New version  |"; 
           echo "|:-----|:----------------|:----------------|:-------------|"; 
           jq -r '
@@ -65,8 +76,9 @@ jobs:
           ' /tmp/report/renovate-report.json
           echo ""
         ) >> $GITHUB_STEP_SUMMARY
+        
         (
-          echo "Pull requests"
+          echo "# Pull requests"
           echo "| PR No | PR Title | Branch Name | Updates |"; 
           echo "|:------|:---------|:------------|:--------|"; 
           jq -r '
