@@ -50,13 +50,13 @@ jobs:
     - name: Generate Renovate Report Summary
       run: |
         (
-          echo "| Dependency | Current Version | New Version | Update Type | PR Title | PR Status |"; 
-          echo "|:-----------|:-----------------|:------------|:------------|:---------|:----------|"; 
+          echo "| PR NO | PR Title | Branch Name | Updates |"; 
+          echo "|:------|:---------|:------------|:--------|"; 
           jq -r '
-            .repositories[].branches[] 
-            | select(.upgrades != null) 
-            | .upgrades[] 
-            | "| \(.depName) | \(.currentVersion) | \(.newVersion) | \(.updateType) | \(.prTitle // .branchName) | \(.result) |"
+            .repositories[]?.branches? // []
+            | map(select(.upgrades != null))
+            | .[]
+            | "| \(.prNo // "NEW" ) | \(.prTitle) | \(.branchName) | \(reduce .upgrades[] as $up (null; [., $up.depName + " (" + $up.updateType + ": " + $up.currentVersion + " -> " + $up.newVersion + ") in " + $up.packageFile] | map(select(.!=null)) | join("<br>"))) |"
           ' /tmp/report/renovate-report.json
         ) >> $GITHUB_STEP_SUMMARY
 
