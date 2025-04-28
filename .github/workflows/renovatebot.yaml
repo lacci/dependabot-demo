@@ -62,8 +62,8 @@ jobs:
       
         (
           echo "# Dependencies"
-          echo "| Name | Current version | Dependency type | New version  |"; 
-          echo "|:-----|:----------------|:----------------|:-------------|"; 
+          echo "| Name | Current version | Dependency type | New version  | Registry |"; 
+          echo "|:-----|:----------------|:----------------|:-------------|----------|"; 
           jq -r '
             .repositories[]? 
             | .packageFiles? // {}
