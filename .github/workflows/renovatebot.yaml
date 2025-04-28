@@ -47,57 +47,53 @@ jobs:
       run: |
           cat "/tmp/report/renovate-report.json"
 
-    # Step 3: Run the script to generate and print the markdown summary
-    - name: Print Renovate Report Summary
+    - name: Generate Renovate Report Summary
       run: |
-        # Print the Markdown table header
-        echo "# Renovate Dependency Update Summary"
-        echo ""
-        echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
-        echo "|:-----------|:-----------------|:------------|:------------|:----------|:----------|:------|"
-
-        # Run jq to process the JSON and print the table rows to the console
-        jq -r '
-          def existing_prs: (
-            .repositories[]?.branches? // []
-            | map(select(.upgrades != null))
-            | map(.upgrades[])
-            | map({
+        {
+          echo "# Renovate Dependency Update Summary"
+          echo ""
+          echo "| Dependency | Current Version | New Version | Update Type | PR Branch | PR Status | Notes |"
+          echo "|:-----------|:----------------|:------------|:------------|:----------|:----------|:------|"
+          jq -r '
+            def existing_prs: (
+              .repositories[]?.branches? // []
+              | map(select(.upgrades != null))
+              | map(.upgrades[])
+              | map({
+                  depName: .depName,
+                  currentVersion: .currentVersion,
+                  newVersion: .newVersion,
+                  prBranch: (.branchName // "-"),
+                  prStatus: (.result // "done")
+                })
+            );
+    
+            .repositories[]? 
+            | .packageFiles? // {}
+            | to_entries[]
+            | .value[]
+            | select(.deps != null)
+            | .deps[]
+            | select(.updates != null and (.updates | length > 0))
+            | .updates[]
+            | {
                 depName: .depName,
                 currentVersion: .currentVersion,
                 newVersion: .newVersion,
-                prBranch: (.branchName // "-"),
-                prStatus: (.result // "done")
-              })
-          );
+                updateType: .updateType,
+                branchName: .branchName,
+                notes: .bucket
+              }
+            | . as $u
+            | (
+                existing_prs
+                | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
+                | .[0] // {prBranch: "-", prStatus: "Missing"}
+              ) as $pr
+            | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
+          ' /tmp/report/renovate-report.json
+        } >> $GITHUB_STEP_SUMMARY
 
-          .repositories[]? 
-          | .packageFiles? // {}
-          | to_entries[]
-          | .value[]
-          | select(.deps != null)
-          | .deps[]
-          | select(.updates != null and (.updates | length > 0))
-          | .updates[]
-          | {
-              depName: .depName,
-              currentVersion: .currentVersion,
-              newVersion: .newVersion,
-              updateType: .updateType,
-              branchName: .branchName,
-              notes: .bucket
-            }
-          | . as $u
-          | (
-              existing_prs
-              | map(select(.depName == $u.depName and .newVersion == $u.newVersion))
-              | .[0] // {prBranch: "-", prStatus: "Missing"}
-            ) as $pr
-          | "| \($u.depName) | \($u.currentVersion) | \($u.newVersion) | \($u.updateType) | \($pr.prBranch) | \($pr.prStatus) | \($u.notes) |"
-        ' /tmp/report/renovate-report.json
-
-        echo ""
-      shell: bash
 
 
 
