@@ -75,10 +75,16 @@ jobs:
             | select(.deps != null)
             | .deps[]
             | select(.updates != null and (.updates | length > 0))
-            | .updates[]
             | {
                 depName: (.depName // "-"),
                 currentVersion: (.currentVersion // "-"),
+                updates: .updates
+              }
+            | . as $dep
+            | $dep.updates[]
+            | {
+                depName: $dep.depName,
+                currentVersion: $dep.currentVersion,
                 newVersion: (.newVersion // "-"),
                 updateType: (.updateType // "-"),
                 branchName: (.branchName // "-"),
@@ -99,7 +105,7 @@ jobs:
                 prStatus: $pr.prStatus,
                 notes: $u.notes
               }
-          ' /tmp/report/renovate-report.json \
+          ' renovate-report.json \
           | jq -s '
             sort_by(.depName)
             | .[]
