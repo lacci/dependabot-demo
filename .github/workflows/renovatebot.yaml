@@ -100,7 +100,7 @@ jobs:
           echo "<summary>For all details see the Full Renovate Report (JSON)</summary>"
           echo ""
           echo '```json'
-          cat /tmp/report/renovate-report.json
+          jq . /tmp/report/renovate-report.json
           echo ""
           echo '```'
           echo "</details>"
