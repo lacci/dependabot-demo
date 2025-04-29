@@ -50,13 +50,18 @@ jobs:
     - name: Generate Renovate Report Summary
       run: |
         (
-          echo "# Problems"
-          echo "| Type | Message | Details  |"; 
-          echo "|:-----|:--------|:---------|"; 
-          jq -r '
-            .repositories[].problems[] |
-            "| \(if (.warnings // []) | length > 0 then "⚠️" elif .err then "❌" else "" end) | \(.msg) | \(if (.warnings // []) | length > 0 then (.warnings | join("<br>")) elif .err then .err.message else "" end) |"
-          ' /tmp/report/renovate-report.json
+          if jq -e '.repositories[].problems | length == 0' input.json > /dev/null; then
+            # No problems, do nothing
+            :
+          else
+            echo "# Problems"
+            echo "| Type | Message | Details  |"; 
+            echo "|:-----|:--------|:---------|"; 
+            jq -r '
+              .repositories[].problems[] |
+              "| \(if (.warnings // []) | length > 0 then "⚠️" elif .err then "❌" else "" end) | \(.msg) | \(if (.warnings // []) | length > 0 then (.warnings | join("<br>")) elif .err then .err.message else "" end) |"
+            ' /tmp/report/renovate-report.json
+          fi
           echo ""
         ) >> $GITHUB_STEP_SUMMARY
       
