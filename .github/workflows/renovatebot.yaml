@@ -22,7 +22,7 @@ jobs:
       id: id
       run: |
         echo "user=$(id -u)" >> $GITHUB_OUTPUT
-    #     echo "group=$(id -g)" >> $GITHUB_OUTPUT
+        echo "group=$(id -g)" >> $GITHUB_OUTPUT
 
     - name: Generate report folder
       run: |
@@ -32,7 +32,7 @@ jobs:
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
       with:
-        # docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
+        docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
         docker-volumes: ${{ env.REPORT_DIR }}:${{ env.REPORT_DIR }}
       env:
         RENOVATE_TOKEN: ${{ github.token }}
