@@ -77,7 +77,7 @@ jobs:
             | select(.deps != null)
             | .deps[]
             | . as $dep
-            | "| \(.depName ) | \(.currentVersion // "N/A") | \(reduce .updates[] as $up (null; [., $up.newVersion + " (" + $up.updateType + ")"] | map(select(.!=null)) | join("<br>")) // "N/A") | \(.depType) | \(.registryUrl // "N/A") |"
+            | "| \(.depName ) | \(.currentVersion // "---") | \(reduce .updates[] as $up (null; [., $up.newVersion + " (" + $up.updateType + ")"] | map(select(.!=null)) | join("<br>")) // "---") | \(.depType) | \(.registryUrl // "---") |"
           ' /tmp/report/renovate-report.json
           echo ""
         ) >> $GITHUB_STEP_SUMMARY
@@ -101,6 +101,7 @@ jobs:
           echo ""
           echo '```json'
           cat /tmp/report/renovate-report.json
+          echo ""
           echo '```'
           echo "</details>"
         ) >> $GITHUB_STEP_SUMMARY
