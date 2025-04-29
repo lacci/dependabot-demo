@@ -84,7 +84,7 @@ jobs:
         
         (
           echo "# Pull requests"
-          echo "| PR No | PR Title | Branch Name | Updates |"; 
+          echo "| PR No | PR Title | Branch Name | Version Update |"; 
           echo "|:------|:---------|:------------|:--------|"; 
           jq -r '
             .repositories[]?.branches? // []
