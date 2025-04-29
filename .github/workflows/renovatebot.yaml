@@ -3,8 +3,9 @@ name: Renovatebot
 on: workflow_dispatch
 
 env:
-  REPORT_DIR: renovatebot-reports
+  REPORT_DIR: /tmp/report
   REPORT_NAME: renovate-report.json
+  REPORT_PATH: /tmp/report/renovate-report.json
 
 jobs:
   renovatebot:
@@ -27,30 +28,26 @@ jobs:
     - name: Generate report folder
       run: |
         mkdir -p /tmp/report
-        sudo chown -R ${{ steps.id.outputs.user }} /tmp/report
+        sudo chown -R ${{ steps.id.outputs.user }} ${{ env.REPORT_DIR }}
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
       with:
         docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
-        docker-volumes: /tmp/report:/tmp/report
+        docker-volumes: ${{ env.REPORT_DIR }}:${{ env.REPORT_DIR }}
       env:
         LOG_LEVEL: debug
         RENOVATE_TOKEN: ${{ github.token }}
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
-        RENOVATE_REPORT_PATH: /tmp/report/renovate-report.json
+        RENOVATE_REPORT_PATH: ${{ env.REPORT_PATH }}
         HOME: ${{ github.workspace }}
-    
-    - name: Renovatebot report
-      run: |
-          cat "/tmp/report/renovate-report.json"
 
     - name: Generate Renovate Report Summary
       run: |
         (
-          if jq -e '.repositories[].problems | length == 0' /tmp/report/renovate-report.json > /dev/null; then
+          if jq -e '.repositories[].problems | length == 0' ${{ env.REPORT_PATH }} > /dev/null; then
             # No problems, do nothing
             :
           else
@@ -60,7 +57,7 @@ jobs:
             jq -r '
               .repositories[].problems[] |
               "| \(if (.warnings // []) | length > 0 then "⚠️" elif .err then "❌" else "" end) | \(.msg) | \(if (.warnings // []) | length > 0 then (.warnings | join("<br>")) elif .err then .err.message else "" end) |"
-            ' /tmp/report/renovate-report.json
+            ' ${{ env.REPORT_PATH }}
           fi
           echo ""
         ) >> $GITHUB_STEP_SUMMARY
@@ -78,7 +75,7 @@ jobs:
             | .deps[]
             | . as $dep
             | "| \(.depName ) | \(.currentVersion // "---") | \(reduce .updates[] as $up (null; [., $up.newVersion + " (" + $up.updateType + ")"] | map(select(.!=null)) | join("<br>")) // "---") | \(.depType) | \(.registryUrl // "---") |"
-          ' /tmp/report/renovate-report.json
+          ' ${{ env.REPORT_PATH }}
           echo ""
         ) >> $GITHUB_STEP_SUMMARY
         
@@ -91,7 +88,7 @@ jobs:
             | map(select(.upgrades != null))
             | .[]
             | "| \(.prNo // "NEW" ) | \(.prTitle) | \(.branchName) | \(reduce .upgrades[] as $up (null; [., $up.depName + " (" + $up.updateType + ": " + $up.currentVersion + " -> " + $up.newVersion + ") in " + $up.packageFile] | map(select(.!=null)) | join("<br>"))) |"
-          ' /tmp/report/renovate-report.json
+          ' ${{ env.REPORT_PATH }}
         ) >> $GITHUB_STEP_SUMMARY
 
         (
@@ -100,7 +97,7 @@ jobs:
           echo "<summary>For all details see the Full Renovate Report (JSON)</summary>"
           echo ""
           echo '```json'
-          jq . /tmp/report/renovate-report.json
+          jq . ${{ env.REPORT_PATH }}
           echo ""
           echo '```'
           echo "</details>"
