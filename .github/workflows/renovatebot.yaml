@@ -18,16 +18,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4.2.2
         
-    # - name: Determine current user
-    #   id: id
-    #   run: |
-    #     echo "user=$(id -u)" >> $GITHUB_OUTPUT
+    - name: Determine current user
+      id: id
+      run: |
+        echo "user=$(id -u)" >> $GITHUB_OUTPUT
     #     echo "group=$(id -g)" >> $GITHUB_OUTPUT
 
     - name: Generate report folder
       run: |
         mkdir -p ${{ env.REPORT_DIR }}
-        sudo chown -R $(id -u) ${{ env.REPORT_DIR }}
+        sudo chown -R ${{ steps.id.outputs.user }} ${{ env.REPORT_DIR }}
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
