@@ -24,9 +24,9 @@ jobs:
     #     echo "user=$(id -u)" >> $GITHUB_OUTPUT
     #     echo "group=$(id -g)" >> $GITHUB_OUTPUT
 
-    # - name: Generate report folder
-    #   run: |
-    #     mkdir -p /tmp/report
+    - name: Generate report folder
+      run: |
+        mkdir -p ${{ env.REPORT_DIR }}
     #     sudo chown -R ${{ steps.id.outputs.user }} ${{ env.REPORT_DIR }}
 
     - name: Self-hosted Renovate
