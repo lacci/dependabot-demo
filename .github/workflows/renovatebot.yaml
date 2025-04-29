@@ -95,6 +95,7 @@ jobs:
         ) >> $GITHUB_STEP_SUMMARY
 
         (
+          echo "# Details"
           echo "<details>"
           echo "<summary>For all details see the Full Renovate Report (JSON)</summary>"
           echo ""
