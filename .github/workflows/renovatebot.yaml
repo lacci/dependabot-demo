@@ -41,7 +41,7 @@ jobs:
         # RENOVATE_DRY_RUN: true
         RENOVATE_REPORT_TYPE: file
         RENOVATE_REPORT_PATH: ${{ env.REPORT_PATH }}
-        HOME: ${{ github.workspace }}
+        # HOME: ${{ github.workspace }}
 
     - name: Generate Renovate Report Summary
       run: |
