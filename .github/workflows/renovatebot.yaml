@@ -30,6 +30,10 @@ jobs:
         mkdir -p ${{ env.REPORT_DIR }}
         sudo chown -R ${{ steps.id.outputs.user }} ${{ env.REPORT_DIR }}
 
+    - name: Install Conan
+      run: |
+        pip install conan
+          
     - name: Install dependencies via Conan
       run: |
         mkdir -p ${{ env.BUILD_DIR }}
