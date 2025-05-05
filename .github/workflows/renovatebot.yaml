@@ -19,7 +19,7 @@ jobs:
       run: echo "${{ github.api_url }}"
     
     - name: Checkout
-      uses: actions/checkout@v4.2.2
+      uses: actions/checkout@v4
         
     - name: Determine current user
       id: id
