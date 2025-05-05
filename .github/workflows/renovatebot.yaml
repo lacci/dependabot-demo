@@ -7,11 +7,6 @@ env:
   REPORT_PATH: /tmp/report/renovate-report.json
   BUILD_DIR: ${{ github.workspace }}/build
 
-permissions:
-  contents: read
-  id-token: write
-  security-events: write
-
 jobs:
   renovatebot:
     runs-on: ubuntu-latest
