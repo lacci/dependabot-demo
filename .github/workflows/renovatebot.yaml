@@ -43,7 +43,7 @@ jobs:
         conan install . --output-folder=${{ env.BUILD_DIR }} --build=missing
 
     - name: Generate SPDX SBOM using Anchore's Syft
-      uses: anchore/sbom-action@v0.15.4
+      uses: anchore/sbom-action@v0.19.0
       with:
         path: ${{ env.BUILD_DIR }}
         format: spdx-json
