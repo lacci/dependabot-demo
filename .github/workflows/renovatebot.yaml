@@ -11,7 +11,7 @@ jobs:
   renovatebot:
     runs-on: ubuntu-latest
     permissions:
-      security-events: read
+      security-events: write
     steps:
     - name: Echo api url
       run: echo "${{ github.api_url }}"
