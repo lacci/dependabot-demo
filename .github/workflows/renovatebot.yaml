@@ -11,6 +11,8 @@ jobs:
   renovatebot:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
+      id-token: write
       security-events: write
     steps:
     - name: Echo api url
