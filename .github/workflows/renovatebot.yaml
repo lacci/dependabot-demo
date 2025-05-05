@@ -50,6 +50,7 @@ jobs:
       with:
         path: ${{ env.BUILD_DIR }}
         format: cyclonedx-json
+        upload-artifact: false  # not needed
         output-file: ${{ env.REPORT_DIR }}/sbom.json
 
     - name: Upload SBOM to GitHub
