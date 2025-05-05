@@ -41,22 +41,22 @@ jobs:
           
     - name: Install dependencies via Conan
       run: |
-        mkdir -p ${{ env.BUILD_DIR }}
+        # mkdir -p ${{ env.BUILD_DIR }}
         conan profile detect
         conan install . --output-folder=${{ env.BUILD_DIR }} --build=missing
 
-    - name: Generate SBOM using Anchore
+    - name: Generate SPDX SBOM using Anchore's Syft
       uses: anchore/sbom-action@v0.15.4
       with:
         path: ${{ env.BUILD_DIR }}
-        format: cyclonedx-json
-        upload-artifact: false  # not needed
-        output-file: ${{ env.REPORT_DIR }}/sbom.json
+        format: spdx-json
+        upload-artifact: false  # don't upload as artifact
+        output-file: ${{ env.REPORT_DIR }}/sbom.spdx.json
 
     - name: Upload SBOM to GitHub
       uses: advanced-security/spdx-dependency-submission-action@v0.1.1
       with:
-        filePath: ${{ env.REPORT_DIR }}/sbom.json
+        filePath: ${{ env.REPORT_DIR }}/sbom.spdx.json
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
