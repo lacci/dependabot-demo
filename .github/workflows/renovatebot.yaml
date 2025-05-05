@@ -44,9 +44,9 @@ jobs:
         output-file: ${{ env.REPORT_DIR }}/sbom.json
 
     - name: Upload SBOM to GitHub
-      uses: advanced-security/upload-sbom@v1
+      uses: advanced-security/spdx-dependency-submission-action@v0.1.1
       with:
-        sbom-path: ${{ env.REPORT_DIR }}/sbom.json
+        filePath: ${{ env.REPORT_DIR }}/sbom.json
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
