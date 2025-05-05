@@ -32,21 +32,21 @@ jobs:
 
     - name: Install dependencies via Conan
       run: |
-        mkdir -p ${{BUILD_DIR}}
+        mkdir -p ${{ env.BUILD_DIR }}
         conan profile detect
-        conan install . --output-folder=${{BUILD_DIR}} --build=missing
+        conan install . --output-folder=${{ env.BUILD_DIR }} --build=missing
 
     - name: Generate SBOM using Anchore
       uses: anchore/sbom-action@v0.15.4
       with:
-        path: ${{BUILD_DIR}}
+        path: ${{ env.BUILD_DIR }}
         format: cyclonedx-json
-        output-file: ${{REPORT_DIR}}/sbom.json
+        output-file: ${{ env.REPORT_DIR }}/sbom.json
 
     - name: Upload SBOM to GitHub
       uses: advanced-security/upload-sbom@v1
       with:
-        sbom-path: ${{REPORT_DIR}}/sbom.json
+        sbom-path: ${{ env.REPORT_DIR }}/sbom.json
 
     - name: Self-hosted Renovate
       uses: renovatebot/github-action@v41.0.21
