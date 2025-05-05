@@ -56,7 +56,7 @@ jobs:
         filePath: ${{ env.REPORT_DIR }}/sbom.spdx.json
 
     - name: Self-hosted Renovate
-      uses: renovatebot/github-action@v41.0.21
+      uses: renovatebot/github-action@v42.0.1
       with:
         docker-user: "${{ steps.id.outputs.user }}:${{ steps.id.outputs.group }}"
         docker-volumes: ${{ env.REPORT_DIR }}:${{ env.REPORT_DIR }}
